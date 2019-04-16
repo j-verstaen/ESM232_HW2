@@ -57,5 +57,10 @@ almond$plot
 
 ```
 
+###Run all crop function with provided data
+
+```{r}
+allcrop_yield_anomaly(data=data, )
+```
 
 

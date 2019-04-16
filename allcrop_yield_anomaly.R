@@ -7,17 +7,15 @@
 #' @return yield anomaly for each year (tons/acres), plot of variables and yield anomaly over time series, and max and minimum yields over a time series of multiple year inputs
 
 
-almond_yield_anomaly <- function (data, crop){
-  
-  yearly <- data %>%
+allcrop_yield_anomaly <- function (data, crop){
+    yearly <- data %>%
     group_by(month, year)%>%
     summarize(tmax_c = mean(tmax_c),
               tmin_c = mean(tmin_c),
               precip = sum(precip))
- 
+ Crop <- crop
 ####almonds  
    if(crop == "almond") {
-  
     crop<- yearly %>%
        filter(month== 2)%>%
        select(year, month, tmin_c)
@@ -30,12 +28,12 @@ almond_yield_anomaly <- function (data, crop){
     crop$anomaly <- -0.015*crop$tmin_c - 0.0046*(crop$tmin_c**2) - 0.07*crop$precip  + 0.0043*(crop$precip**2) + 0.28  
   
     results <- crop%>% 
-      select(year, anomaly)
-  }
+      select(year, anomaly) 
+    
+    }else{ 
  
 ####avocados
-  
-  else{if(crop == "avocados"){
+  if(crop == "avocados"){
     crop<- yearly %>%
       filter(month== 8)%>%
       mutate(year = year -1) %>%
@@ -56,11 +54,10 @@ almond_yield_anomaly <- function (data, crop){
   
   results <- crop%>% 
     select(year, anomaly)
-  }
+  }else{
 
 #### wine_grapes    
-  
-  else{ if(crop == "wine_grapes") {
+  if(crop == "wine_grapes") {
     crop<- yearly %>%
       filter(month== 4)%>%
       select(year, month, tmin_c)
@@ -82,12 +79,10 @@ almond_yield_anomaly <- function (data, crop){
     
     results <- crop%>% 
       select(year, anomaly)
-  }
+  }else{
     
 ### walnuts
-    
-   else{ if(crop == "walnuts") {
-  
+    if(crop == "walnuts") {
         crop<- yearly %>%
         filter(month == 11)%>%
         mutate(year = year -1) %>%
@@ -102,13 +97,10 @@ almond_yield_anomaly <- function (data, crop){
       
       results <- crop%>% 
         select(year, anomaly)
-   }
+   }else{
 
-    
-    }}}
-  
 #### Orange 
-  else{ if (crop == "orange"){
+  if (crop == "orange"){
   yearly <- data %>%
     group_by(month, year)%>%
     summarize(tmax_c = mean(tmax_c),
@@ -128,37 +120,43 @@ almond_yield_anomaly <- function (data, crop){
   crop$anomaly <- 1.08 * crop$tmin_c - 0.20 * (crop$tmin_c**2) + 4.99 * crop$precip - 1.97 * (crop$precip**2) - 2.47
   
   results <- crop %>% select(year, anomaly)
-  }
-    }
+  } else {
+
+####Table grapes 
+  if (crop =="table_grapes")
+    crop <- yearly%>%
+      filter(month == 7)%>%
+      mutate(tmin_7 = tmin_c)%>%
+      select(year, month, tmin_7)
   
-  t <- ggplot(almond, aes(year, tmin_c))+
-    geom_line(size=1.5)+
-    labs(x="Year", y="°C", subtitle = "Minimum temperature")+
-    theme_classic()
-  
-  p <- ggplot(almond, aes(year, precip))+
-    geom_line(size=1.5)+
-    labs(x="Year", y="mm", subtitle = "Precipitation")+
-    theme_classic()
-  
-  a <- ggplot(almond, aes(year, anomaly))+
-    geom_line(size=1.5)+
-    labs(x="Year", y=expression("ton acre"^-1), subtitle = "Yield anomaly")+
-    theme_classic()
-  
-  
-  plot(x=almond$year, y=almond$anomaly, xlab="Year", lwd=1,
-       ylab="ton acre", 
-       type="l", yaxs="i", xaxs="i")
-  
-  for (i in 1:1000){
-    increase <- runif(1,0,3)
+    crop <- yearly%>%
+      filter(month == 4)%>%
+      mutate(tmin_4 = tmin_c)%>%
+      select(year, month, tmin_4)%>%
+      merge(crop, by="year")
     
-    almond$anomaly <- -0.015*(almond$tmin_c + increase) - 0.0046*((almond$tmin_c + increase)**2) - 0.07*almond$precip  + 0.0043*(almond$precip**2) + 0.28  
+    crop <- yearly%>%
+      filter(month == 1)%>%
+      mutate(precip1 = precip)%>%
+      select(year, month, precip1)%>%
+      merge(crop, by="year")
+      
+    crop<- yearly %>%
+      filter(month == 10)%>%
+      mutate(year = year -1, precip10 = precip) %>%
+      select(year, month, precip10)%>%
+      merge(crop, by="year")
+      
+    crop$anomaly <- (6.93 * crop$tmin_7  - 0.19 * (crop$tmin_7**2) + 2.61 * crop$tmin_4 - 0.15 * (crop$tmin_4**2) + 
+                  0.035 * crop$precip1 + 0.024 * (crop$precip1**2) +1.71 * crop$precip10 - 0.637 * (crop$precip10**2) -73.89)
     
-    lines(x=almond$year, y=almond$anomaly, lwd=2)
-  }
-  all <- ggarrange(t, p, a, ncol=1, nrow=3)
-  
-  return(list(results = results, min = min(results$anomaly), max = max(results$anomaly), plot = all))
+    results<- crop %>% select(year, anomaly)
+      
+  }}}}}
+ 
+    plot(x=crop$year, y=crop$anomaly, xlab="Year", lwd=1,
+         ylab="ton per acre", 
+         type="l", yaxs="i", xaxs="i", main=paste(Crop,"Yield Anomaly"))
+    
+    return(list(results= results, min = min(results$anomaly), max=max(results$anomaly)))
 }
