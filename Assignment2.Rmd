@@ -1,6 +1,6 @@
 ---
 title: "Assignment 2"
-author: "Seleni Cruz"
+author: "Seleni Cruz and Juliette Verstaen"
 date: "April 15, 2019"
 output: html_document
 ---
@@ -57,10 +57,16 @@ almond$plot
 
 ```
 
-###Run all crop function with provided data for avocados 
+###Run all crop function with provided data for other crops 
 
 ```{r}
-allcrop_yield_anomaly(data=data, crop="avocados")
+allcrop_yield_anomaly(data=data, crop="Avocados")
+allcrop_yield_anomaly(data=data, crop="Wine Grapes")
+allcrop_yield_anomaly(data=data, crop="Table Grapes")
+allcrop_yield_anomaly(data=data, crop="Oranges")
+allcrop_yield_anomaly(data=data, crop="Almonds")
+allcrop_yield_anomaly(data=data, crop="Walnuts")
+
 ```
 
 

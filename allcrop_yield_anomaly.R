@@ -2,9 +2,9 @@
 #'
 #' Computes crop yield anomaly from time series of min, max temperature and precipitation
 #' @param data dataframe of time series data including month, year, tmax_c (maximum temperature °C), tmin_c (minimum temeprature°C), precip (precipitation mm)
-#' @param crop wine_grapes, almonds, table_grapes, oranges, walnuts, avocados
+#' @param crop "Wine Grapes", "Almonds", "Table Grapes", "Oranges", "Walnuts", "Avocados"
 #' @authors Seleni Cruz and Juliette Verstaen
-#' @return yield anomaly for each year (tons/acres), plot of variables and yield anomaly over time series, and max and minimum yields over a time series of multiple year inputs
+#' @return yield anomaly for each year (tons/acres), plot of yield anomaly over time series, and max and minimum yields over a time series of multiple year inputs
 
 
 allcrop_yield_anomaly <- function (data, crop){
@@ -15,7 +15,7 @@ allcrop_yield_anomaly <- function (data, crop){
               precip = sum(precip))
  Crop <- crop
 ####almonds  
-   if(crop == "almond") {
+   if(crop == "Almonds") {
     crop<- yearly %>%
        filter(month== 2)%>%
        select(year, month, tmin_c)
@@ -33,7 +33,7 @@ allcrop_yield_anomaly <- function (data, crop){
     }else{ 
  
 ####avocados
-  if(crop == "avocados"){
+  if(crop == "Avocados"){
     crop<- yearly %>%
       filter(month== 8)%>%
       mutate(year = year -1) %>%
@@ -57,7 +57,7 @@ allcrop_yield_anomaly <- function (data, crop){
   }else{
 
 #### wine_grapes    
-  if(crop == "wine_grapes") {
+  if(crop == "Wine Grapes") {
     crop<- yearly %>%
       filter(month== 4)%>%
       select(year, month, tmin_c)
@@ -82,7 +82,7 @@ allcrop_yield_anomaly <- function (data, crop){
   }else{
     
 ### walnuts
-    if(crop == "walnuts") {
+    if(crop == "Walnuts") {
         crop<- yearly %>%
         filter(month == 11)%>%
         mutate(year = year -1) %>%
@@ -100,7 +100,7 @@ allcrop_yield_anomaly <- function (data, crop){
    }else{
 
 #### Orange 
-  if (crop == "orange"){
+  if (crop == "Oranges"){
   yearly <- data %>%
     group_by(month, year)%>%
     summarize(tmax_c = mean(tmax_c),
@@ -123,11 +123,11 @@ allcrop_yield_anomaly <- function (data, crop){
   } else {
 
 ####Table grapes 
-  if (crop =="table_grapes")
+  if (crop =="Table Grapes")
     crop <- yearly%>%
       filter(month == 7)%>%
-      mutate(tmin_7 = tmin_c)%>%
-      select(year, month, tmin_7)
+      select(year, month, tmin_c)%>%
+      rename(tmin_7 = tmin_c, month_z= month)
   
     crop <- yearly%>%
       filter(month == 4)%>%
@@ -154,7 +154,7 @@ allcrop_yield_anomaly <- function (data, crop){
       
   }}}}}
  
-    plot(x=crop$year, y=crop$anomaly, xlab="Year", lwd=1,
+    plot(x=crop$year, y=crop$anomaly, xlab="Year", lwd=3,
          ylab="ton per acre", 
          type="l", yaxs="i", xaxs="i", main=paste(Crop,"Yield Anomaly"))
     
