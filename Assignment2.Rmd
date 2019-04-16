@@ -57,10 +57,10 @@ almond$plot
 
 ```
 
-###Run all crop function with provided data
+###Run all crop function with provided data for avocados 
 
 ```{r}
-allcrop_yield_anomaly(data=data, )
+allcrop_yield_anomaly(data=data, crop="avocados")
 ```
 
 
