@@ -49,10 +49,10 @@ almond_yield_anomaly <- function (data, crop){
     crop <- yearly%>%
      filter(month == 10)%>%
       mutate(year = year - 1) %>%
-     select(year, precip_prior, month)%>%
+     select(year, precip, month)%>%
      merge(crop, by="year")
   
-  crop$anomaly <- 17.71*(crop$tmax_c) - 0.29*(crop$tmax_c**2) + 3.25(crop$tmin_c) - 0.14(crop$tmin_c**2) + 1*crop$precip_prior + 0.31*(crop$precip_prior**2) + 288.09  
+  crop$anomaly <- 17.71*(crop$tmax_c) - 0.29*(crop$tmax_c**2) + 3.25*(crop$tmin_c) - 0.14*(crop$tmin_c**2) + 1*(crop$precip) + 0.31*(crop$precip**2) + 288.09  
   
   results <- crop%>% 
     select(year, anomaly)
@@ -72,15 +72,35 @@ almond_yield_anomaly <- function (data, crop){
       
     crop <- yearly%>%
         filter(month == 9)%>%
-        mutate( year = year -1) %>%
-        mutate(precip_sepprior = precip) %>%
-        select(year, month, precip_sepprior)%>%
+        mutate( year = year - 1) %>%
+        mutate(precip_psep = precip) %>%
+        select(year, month, precip_psep)%>%
         merge(crop, by="year")
     
-    crop$anomaly <- 2.65*(crop$tmin_c) - 0.17*(crop$tmin_c**2) + 1*crop$precip_june + 0.31*(crop$precip_junep**2) +  1*crop$precip_sepprior + 0.31*(crop$precip_sepprior**2) +288.09  
+    crop$anomaly <- 2.65*(crop$tmin_c) - 0.17*(crop$tmin_c**2) + 4.88*(crop$precip_june) - 4.93*(crop$precip_june**2) - 2.24*(crop$precip_psep) + 1.54*(crop$precip_psep**2) - 10.50  
     
     results <- crop%>% 
       select(year, anomaly)
+
+### walnuts
+    
+   else{ if(crop == "walnuts") {
+  
+        crop<- yearly %>%
+        filter(month== 11)%>%
+        mutate(year = year -1) %>%
+        select(year, month, tmax_c)
+      
+      crop <- yearly%>%
+        filter(month == 2)%>%
+        select(year, month, precip)%>%
+        merge(crop, by="year")
+      
+      crop$anomaly <- 0.68*(crop$tmax_c) - 0.020*(crop$tmax_c**2) + 0.038*(crop$precip) - 0.0051*(crop$precip**2)  - 5.83
+      
+      results <- crop%>% 
+        select(year, anomaly)
+
     
     }}
   
