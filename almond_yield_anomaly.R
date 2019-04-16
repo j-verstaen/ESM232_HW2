@@ -1,9 +1,8 @@
-#' Crop Yield Anomaly
+#' Almond Yield Anomaly
 #'
 #' Computes crop yield anomaly from time series of min, max temperature and precipitation
 #' @param data dataframe of time series data including month, year, tmax_c (maximum temperature °C), tmin_c (minimum temeprature°C), precip (precipitation mm)
-#' @param crop wine_grapes, almonds, table_grapes, oranges, walnuts, avocdos
-#' @author Seleni
+#' @author Seleni Cruz and Juliette Verstaen
 #' @return yield anomaly for each year, plot of variables and yield anomaly over time series, and max and minimum yields over a time series of multiple year inputs
 
 
@@ -45,8 +44,8 @@ almond_yield_anomaly <- function (data){
   
     
     plot(x=almond$year, y=almond$anomaly, xlab="Year", lwd=1,
-         ylab="ton acre", 
-         type="l", yaxs="i", xaxs="i")
+         ylab="ton per acre", 
+         type="l", yaxs="i", xaxs="i", main= "Yield anomaly: Temperature sensitivity anlysis")
     
     for (i in 1:1000){
       increase <- runif(1,0,3)
@@ -59,3 +58,4 @@ almond_yield_anomaly <- function (data){
 
     return(list(results = results, min = min(results$anomaly), max = max(results$anomaly), plot = all))
 }
+

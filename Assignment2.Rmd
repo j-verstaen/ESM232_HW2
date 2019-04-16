@@ -9,13 +9,14 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-```{r packages}
+```{r packages, message=FALSE}
 library(dplyr)
 library(ggplot2)
 library(lubridate)
 library(ggpubr)
 ```
 
+###Load data and summarize by year
 ```{r data}
 data<- read.csv (here::here("data_assignment1.csv"))
 data$Date<- mdy(data$Date)
@@ -28,6 +29,7 @@ Year <- data%>%
             no_months=length(unique(month))) #first and last month dont have full 12 months
 ```
 
+###Plot temperature and precipitation time series 
 ```{r plots}
 ggplot(data)+
   geom_line(aes(x=Date, y= tmin_c), color= "blue")+
@@ -41,12 +43,19 @@ ggplot(data, aes(x=Date, y= precip))+
 
 ```
 
+###Run function with provided data
+#### Temperature sensitivity analysis plot: 1000 simulations with random uniform temperature increases between 0 and 3 degrees celcius. Almond yield anomaly seem to not be sensitive to changes in temperature.
 ```{r run_function}
 
 almond <-almond_yield_anomaly(data=data)
-almond
+almond$results
+almond$min
+almond$max
+almond$plot
 
 
 
 ```
+
+
 
