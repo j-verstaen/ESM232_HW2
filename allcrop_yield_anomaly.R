@@ -56,6 +56,7 @@ almond_yield_anomaly <- function (data, crop){
   
   results <- crop%>% 
     select(year, anomaly)
+  }
 
 #### wine_grapes    
   
@@ -81,17 +82,18 @@ almond_yield_anomaly <- function (data, crop){
     
     results <- crop%>% 
       select(year, anomaly)
-
+  }
+    
 ### walnuts
     
    else{ if(crop == "walnuts") {
   
         crop<- yearly %>%
-        filter(month== 11)%>%
+        filter(month == 11)%>%
         mutate(year = year -1) %>%
         select(year, month, tmax_c)
       
-      crop <- yearly%>%
+        crop <- yearly %>%
         filter(month == 2)%>%
         select(year, month, precip)%>%
         merge(crop, by="year")
@@ -102,7 +104,7 @@ almond_yield_anomaly <- function (data, crop){
         select(year, anomaly)
 
     
-    }}
+    }}}
   
   
   
