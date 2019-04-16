@@ -27,10 +27,10 @@ almond_yield_anomaly <- function (data, crop){
         select(year, month, precip)%>%
         merge(crop, by="year")
   
-  crop$anomaly <- -0.015*crop$tmin_c - 0.0046*(crop$tmin_c**2) - 0.07*crop$precip  + 0.0043*(crop$precip**2) + 0.28  
+    crop$anomaly <- -0.015*crop$tmin_c - 0.0046*(crop$tmin_c**2) - 0.07*crop$precip  + 0.0043*(crop$precip**2) + 0.28  
   
-  results <- crop%>% 
-    select(year, anomaly)
+    results <- crop%>% 
+      select(year, anomaly)
   }
  
 ####avocados
