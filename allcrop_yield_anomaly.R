@@ -35,11 +35,10 @@ almond_yield_anomaly <- function (data, crop){
  
 ####avocados
   
-  else{ if(crop == "avocados") {
-
+  else{if(crop == "avocados"){
     crop<- yearly %>%
-    filter(month== 8)%>%
-    select(year, month, tmax_c)
+      filter(month== 8)%>%
+      select(year, month, tmax_c)
     
     crop <- yearly %>%
       filter(month == 5) %>%
@@ -47,15 +46,16 @@ almond_yield_anomaly <- function (data, crop){
       merge(crop, by = "year")
   
     crop <- yearly%>%
-     filter(month == 10)%>%
+      filter(month == 10)%>%
       mutate(year = year - 1) %>%
-     select(year, precip_prior, month)%>%
-     merge(crop, by="year")
+      select(year, precip_prior, month)%>%
+      merge(crop, by="year")
   
-  crop$anomaly <- 17.71*(crop$tmax_c) - 0.29*(crop$tmax_c**2) + 3.25(crop$tmin_c) - 0.14(crop$tmin_c**2) + 1*crop$precip_prior + 0.31*(crop$precip_prior**2) + 288.09  
+    crop$anomaly <- 17.71*(crop$tmax_c) - 0.29*(crop$tmax_c**2) + 3.25(crop$tmin_c) - 0.14(crop$tmin_c**2) + 1*crop$precip_prior + 0.31*(crop$precip_prior**2) + 288.09  
   
-  results <- crop%>% 
-    select(year, anomaly)
+    results <- crop%>% 
+      select(year, anomaly)
+  }
 
 #### wine_grapes    
   
@@ -86,7 +86,29 @@ almond_yield_anomaly <- function (data, crop){
   
   
   
+  #### Orange 
+  else{ if (crop == "orange"){
+  yearly <- data %>%
+    group_by(month, year)%>%
+    summarize(tmax_c = mean(tmax_c),
+              tmin_c = mean(tmin_c),
+              precip = sum(precip))
   
+  crop <- yearly%>%
+    filter(month == 12)%>%
+    mutate(year = year-1)%>%
+    select(year, month, tmin_c)
+  
+  crop <- yearly%>%
+    filter(month == 5)%>%
+    select(year, month, precip)%>%
+    merge(crop, by="year")
+  
+  crop$anomaly <- 1.08 * crop$tmin_c - 0.20 * (crop$tmin_c**2) + 4.99 * crop$precip - 1.97 * (crop$precip**2) - 2.47
+  
+  results <- crop %>% select(year, anomaly)
+  }
+    }
   
   t <- ggplot(almond, aes(year, tmin_c))+
     geom_line(size=1.5)+
