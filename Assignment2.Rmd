@@ -1,0 +1,52 @@
+---
+title: "Assignment 2"
+author: "Seleni Cruz"
+date: "April 15, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r packages}
+library(dplyr)
+library(ggplot2)
+library(lubridate)
+library(ggpubr)
+```
+
+```{r data}
+data<- read.csv (here::here("data_assignment1.csv"))
+data$Date<- mdy(data$Date)
+
+Year <- data%>%
+  group_by(year)%>%
+  summarize(tmax_c = mean(tmax_c),
+            tmin_c = mean(tmin_c),
+            precip = sum(precip), 
+            no_months=length(unique(month))) #first and last month dont have full 12 months
+```
+
+```{r plots}
+ggplot(data)+
+  geom_line(aes(x=Date, y= tmin_c), color= "blue")+
+  geom_line(aes(x=Date, y= tmax_c), color= "red")+
+  labs(y= "temperature °C")+
+  scale_x_date(date_labels = "%b/%Y")
+
+ggplot(data, aes(x=Date, y= precip))+
+  geom_line()+
+  scale_x_date(date_labels = "%b/%Y")
+
+```
+
+```{r run_function}
+
+almond <-almond_yield_anomaly(data=data)
+almond
+
+
+
+```
+
