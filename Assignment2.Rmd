@@ -53,8 +53,6 @@ almond$min
 almond$max
 almond$plot
 
-
-
 ```
 
 ###Run all crop function with provided data for avocados 
