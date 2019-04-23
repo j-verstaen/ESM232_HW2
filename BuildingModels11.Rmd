@@ -27,9 +27,62 @@ almond
 almond <- data.frame(almond)
 class(almond$average)
 
-Create an R markdown document that applies your function, for 3 warming scenarios (+1, +2, +3) and 2 Precipitation change scenarios. In the first precipitation scenario January precipitation doubles and in the second scenario, January precipitation is 1/2 of what it currently is. Apply climate changes to all years.  Also run your model for two differnt prices - a high value and a low value 
+#Create an R markdown document that applies your function, for 3 warming scenarios (+1, +2, +3) and 2 Precipitation change scenarios. In the first precipitation scenario January precipitation doubles and in the second scenario, January precipitation is 1/2 of what it currently is. Apply climate changes to all years.  Also run your model for two differnt prices - a high value and a low value 
 
 ```
+
+12 Scenerios for changing temperature (0, +1, +2, +3) and precipitation (0, X0.5, X2)
+
+```{r}
+
+#Scenerio 1: (T0, P0)
+s1 <- almond_yield_anomaly(data=climate, result= "average", t_change = 0, p_change = 0, min_price = 1800, max_price = 4200)
+
+#Scenerio 2: (T0, P0.5)
+s2 <- almond_yield_anomaly(data=climate, result= "average", t_change = 0, p_change = 0.5, min_price = 1800, max_price = 4200)
+
+#Scenerio 3: (T0, P2)
+s3 <- almond_yield_anomaly(data=climate, result= "average", t_change = 0, p_change = 2, min_price = 1800, max_price = 4200)
+
+#Scenerio 4: (T1, P0)
+s4 <- almond_yield_anomaly(data=climate, result= "average", t_change = 1, p_change = 0, min_price = 1800, max_price = 4200)
+
+#Scenerio 5: (T1, P0.5)
+s5 <- almond_yield_anomaly(data=climate, result= "average", t_change = 1, p_change = 0.5, min_price = 1800, max_price = 4200)
+
+#Scenerio 6: (T1, P2)
+s6 <- almond_yield_anomaly(data=climate, result= "average", t_change = 1, p_change = 2, min_price = 1800, max_price = 4200)
+
+#Scenerio 7: (T2, P0)
+s7 <- almond_yield_anomaly(data=climate, result= "average", t_change = 2, p_change = 0, min_price = 1800, max_price = 4200)
+
+#Scenerio 8: (T2, P0.5)
+s8 <- almond_yield_anomaly(data=climate, result= "average", t_change = 2, p_change = 0.5, min_price = 1800, max_price = 4200)
+
+#Scenerio 9: (T2, P2)
+s9 <- almond_yield_anomaly(data=climate, result= "average", t_change = 2, p_change = 2, min_price = 1800, max_price = 4200)
+
+#Scenerio 10: (T3, P0)
+s10 <- almond_yield_anomaly(data=climate, result= "average", t_change = 3, p_change = 0, min_price = 1800, max_price = 4200)
+
+#Scenerio 11: (T3, P0.5)
+s11 <- almond_yield_anomaly(data=climate, result= "average", t_change = 3, p_change = 0.5, min_price = 1800, max_price = 4200)
+
+#Scenerio 12: (T3, P2)
+s12 <- almond_yield_anomaly(data=climate, result= "average", t_change = 3, p_change = 2, min_price = 1800, max_price = 4200)
+
+
+almond_scenerios <- rbind(s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12) %>%
+  data.frame() %>%
+  round(signif(2))
+
+
+```
+
+
+save as vectors
+
+rbind together
 
 
 
