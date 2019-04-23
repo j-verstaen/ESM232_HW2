@@ -22,10 +22,24 @@ climate <- read.table("clim.txt")
 source("almond_yield2.R")
 
 
-almond <- almond_yield_anomaly(data=climate, result= "average", t_change = 1, p_change = 1, price = 4200)
+almond <- almond_yield_anomaly(data=climate, result= "average", t_change = 1, p_change = 1, min_price = 1800, max_price = 4200)
+almond
 almond <- data.frame(almond)
+class(almond$average)
 
 Create an R markdown document that applies your function, for 3 warming scenarios (+1, +2, +3) and 2 Precipitation change scenarios. In the first precipitation scenario January precipitation doubles and in the second scenario, January precipitation is 1/2 of what it currently is. Apply climate changes to all years.  Also run your model for two differnt prices - a high value and a low value 
 
 ```
+
+
+
+
+
+
+
+
+
+
+
+
 
