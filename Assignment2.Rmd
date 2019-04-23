@@ -1,3 +1,69 @@
+<<<<<<< HEAD
+---
+title: "Assignment 2"
+author: "Seleni Cruz"
+date: "April 15, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r packages, message=FALSE}
+library(dplyr)
+library(ggplot2)
+library(lubridate)
+library(ggpubr)
+```
+
+###Load data and summarize by year
+```{r data}
+data<- read.csv (here::here("data_assignment1.csv"))
+data$Date<- mdy(data$Date)
+
+Year <- data%>%
+  group_by(year)%>%
+  summarize(tmax_c = mean(tmax_c),
+            tmin_c = mean(tmin_c),
+            precip = sum(precip), 
+            no_months=length(unique(month))) #first and last month dont have full 12 months
+```
+
+###Plot temperature and precipitation time series 
+```{r plots}
+ggplot(data)+
+  geom_line(aes(x=Date, y= tmin_c), color= "blue")+
+  geom_line(aes(x=Date, y= tmax_c), color= "red")+
+  labs(y= "temperature °C")+
+  scale_x_date(date_labels = "%b/%Y")
+
+ggplot(data, aes(x=Date, y= precip))+
+  geom_line()+
+  scale_x_date(date_labels = "%b/%Y")
+
+```
+
+###Run function with provided data
+#### Temperature sensitivity analysis plot: 1000 simulations with random uniform temperature increases between 0 and 3 degrees celcius. Almond yield anomaly seem to not be sensitive to changes in temperature.
+```{r run_function}
+
+almond <-almond_yield_anomaly(data=data)
+almond$results
+almond$min
+almond$max
+almond$plot
+
+```
+
+###Run all crop function with provided data for avocados 
+
+```{r}
+allcrop_yield_anomaly(data=data, crop="avocados")
+```
+
+
+=======
 ---
 title: "Assignment 2"
 author: "Seleni Cruz and Juliette Verstaen"
@@ -74,3 +140,4 @@ allcrop_yield_anomaly(data=data, crop="Walnuts")
 ```
 
 
+>>>>>>> 624b8b7ee6d79c6efacd71ffd11784da29143dfa
