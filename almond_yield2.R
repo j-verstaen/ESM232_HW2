@@ -9,7 +9,7 @@
 #' @return yield anomaly for each year, plot of variables and yield anomaly over time series, and max and minimum yields over a time series of multiple year inputs
 
 
-almond_yield_anomaly <- function (data, result, t_change, p_change){
+almond_yield_anomaly <- function (data, result, t_change, p_change, min_price, max_price){
   
   yearly <- data %>%
     group_by(month, year)%>%
@@ -36,12 +36,18 @@ almond_yield_anomaly <- function (data, result, t_change, p_change){
        type="l", yaxs="i", xaxs="i", main= "Yield anomaly: Temperature sensitivity anlysis")
   
   
+  Years <- seq(1, nrow(results), 1)
+  
+  source("profit_NPV.R")
+  
+  NPV_min <- NPV_profit(price = min_price, year = Years, anomaly = crop$anomaly)
+  NPV_max <- NPV_profit(price = max_price, year = Years, anomaly = crop$anomaly)
   
   if (result == "average"){
-  return(list(average = mean(results$anomaly), min = min(results$anomaly), max = max(results$anomaly)))
+  return(list(average = mean(results$anomaly), min = min(results$anomaly), max = max(results$anomaly), min_profit = sum(NPV_min), max_profit = sum(NPV_max)))
   
     }else {
-    return(list(results = results, min = min(results$anomaly), max = max(results$anomaly)))
+    return(list(results = results, min = min(results$anomaly), max = max(results$anomaly), min_profit = sum(NPV_min), max_profit = sum(NPV_max)))
   }
 }
 
