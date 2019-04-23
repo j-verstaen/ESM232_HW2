@@ -2,11 +2,14 @@
 #'
 #' Computes crop yield anomaly from time series of min, max temperature and precipitation
 #' @param data dataframe of time series data including month, year, tmax_c (maximum temperature °C), tmin_c (minimum temeprature°C), precip (precipitation mm)
+#' @param t_change temperature change for warming scenatios (1, 2 ,3)
+#' @param p_change percent precipitation change (2, 0.5)
+#' @param result indicated output of average or yearly yield anomaly 
 #' @author Seleni Cruz and Juliette Verstaen
 #' @return yield anomaly for each year, plot of variables and yield anomaly over time series, and max and minimum yields over a time series of multiple year inputs
 
 
-almond_yield_anomaly <- function (data, result){
+almond_yield_anomaly <- function (data, result, t_change, p_change){
   
   yearly <- data %>%
     group_by(month, year)%>%
@@ -23,7 +26,8 @@ almond_yield_anomaly <- function (data, result){
     select(year, month, precip)%>%
     merge(crop, by="year")
   
-  crop$anomaly <- -0.015*crop$tmin_c - 0.0046*(crop$tmin_c**2) - 0.07*crop$precip  + 0.0043*(crop$precip**2) + 0.28  
+  crop$anomaly <- (-0.015*(crop$tmin_c + t_change) - 0.0046*((crop$tmin_c + t_change)**2) 
+                   - 0.07*(crop$precip*p_change)  + 0.0043*((crop$precip*p_change)**2) + 0.28)  
   
   results <- crop%>% select(year, anomaly)
   
@@ -31,13 +35,7 @@ almond_yield_anomaly <- function (data, result){
        ylab="ton per acre", 
        type="l", yaxs="i", xaxs="i", main= "Yield anomaly: Temperature sensitivity anlysis")
   
-  for (i in 1:10){
-    increase <- runif(1,0,3)
-    
-    crop$anomaly <- -0.015*(crop$tmin_c + increase) - 0.0046*((crop$tmin_c + increase)**2) - 0.07*crop$precip  + 0.0043*(crop$precip**2) + 0.28  
-    
-    lines(x=crop$year, y=crop$anomaly, lwd=0.3)
-  }
+  
   
   if (result == "average"){
   return(list(average = mean(results$anomaly), min = min(results$anomaly), max = max(results$anomaly)))
