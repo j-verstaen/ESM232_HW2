@@ -2,9 +2,11 @@
 #'
 #' Computes crop yield anomaly from time series of min, max temperature and precipitation
 #' @param data dataframe of time series data including month, year, tmax_c (maximum temperature °C), tmin_c (minimum temeprature°C), precip (precipitation mm)
+#' @param result indicated output of average or yearly yield anomaly 
 #' @param t_change temperature change for warming scenatios (1, 2 ,3)
 #' @param p_change percent precipitation change (2, 0.5)
-#' @param result indicated output of average or yearly yield anomaly 
+#' @param min_price minimum per yield ($ per ton/acre)
+#' @param max_price maximum per yield ($ per ton/acre)
 #' @author Seleni Cruz and Juliette Verstaen
 #' @return yield anomaly for each year, plot of variables and yield anomaly over time series, and max and minimum yields over a time series of multiple year inputs
 
@@ -43,8 +45,10 @@ almond_yield_anomaly <- function (data, result, t_change, p_change, min_price, m
   NPV_min <- NPV_profit(price = min_price, year = Years, anomaly = crop$anomaly)
   NPV_max <- NPV_profit(price = max_price, year = Years, anomaly = crop$anomaly)
   
+  
+  
   if (result == "average"){
-  return(list(average = mean(results$anomaly), min = min(results$anomaly), max = max(results$anomaly), min_profit = sum(NPV_min), max_profit = sum(NPV_max)))
+  return(cbind(average = mean(results$anomaly), min = min(results$anomaly), max = max(results$anomaly), min_profit = sum(NPV_min), max_profit = sum(NPV_max)))
   
     }else {
     return(list(results = results, min = min(results$anomaly), max = max(results$anomaly), min_profit = sum(NPV_min), max_profit = sum(NPV_max)))
