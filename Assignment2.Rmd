@@ -18,8 +18,12 @@ library(ggpubr)
 
 ###Load data and summarize by year
 ```{r data}
-data<- read.csv (here::here("data_assignment1.csv"))
+source("almond_yield_anomaly.R")
+
+data<- read.csv (here::here("data_assignment1.csv")) 
 data$Date<- mdy(data$Date)
+
+climate<-read.table("clim.txt") # can use read.table 
 
 Year <- data%>%
   group_by(year)%>%
