@@ -17,19 +17,20 @@ library(ggplot2)
 
 ```{r}
 
-climate<-read.table("clim.txt")
+climate <- read.table("clim.txt")
 
 source("almond_yield2.R")
 
-almond <-almond_yield_anomaly(data=climate, result=" ")
+almond <- almond_yield_anomaly(data=climate, result=" ")
 almond$results$anomaly
 count(almond$results$year)
 
-year <- seq(1: count(almond$results$year))
+year <- seq(1, nrow(almond$results), 1)
+anomaly <- almond$results$anomaly
 
 source("profit_NPV.R")
 
-NPV_profit(price= 100, year = , anomaly = almond$results$anomaly)
+NPV_profit(price = 100, year = year, anomaly = anomaly)
 
 ```
 
