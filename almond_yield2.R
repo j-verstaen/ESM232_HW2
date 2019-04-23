@@ -28,7 +28,6 @@ almond_yield_anomaly <- function (data, result, t_change, p_change, min_price, m
   
   crop$anomaly <- (-0.015*(crop$tmin_c + t_change) - 0.0046*((crop$tmin_c + t_change)**2) 
                    - 0.07*(crop$precip*p_change)  + 0.0043*((crop$precip*p_change)**2) + 0.28)  
-  
   results <- crop%>% select(year, anomaly)
   
   plot(x=crop$year, y=crop$anomaly, xlab="Year", lwd=1, col="red",
