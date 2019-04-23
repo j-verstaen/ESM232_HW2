@@ -1,0 +1,35 @@
+---
+title: "Building Models II"
+author: "Seleni Cruz"
+date: "April 23, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(dplyr)
+library(ggplot2)
+```
+
+
+```{r}
+
+climate<-read.table("clim.txt")
+
+source("almond_yield2.R")
+
+almond <-almond_yield_anomaly(data=climate, result=" ")
+almond$results$anomaly
+count(almond$results$year)
+
+year <- seq(1: count(almond$results$year))
+
+source("profit_NPV.R")
+
+NPV_profit(price= 100, year = , anomaly = almond$results$anomaly)
+
+```
+
