@@ -1,0 +1,106 @@
+---
+title: "Sensitivity Assignment"
+author: "Juliette Verstaen"
+date: "5/16/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+Perform a sensitivity analysis of all of the parameters used in your almond yield model  (use plots and prcc values)
+
+Repeat using twice as many parameter sets as you did in your first sensitivity analysis - and look at how this changes the sensitivity results
+    
+Submit R markdown and short write up 
+
+
+```{r}
+
+library(sensitivity)
+library(tidyverse)
+library(pse)
+
+```
+
+
+```{r}
+
+data<- read.csv (here::here("data_assignment1.csv"))
+
+Year <- data%>%
+  group_by(year)%>%
+  plyr::summarize(tmax_c = mean(tmax_c),
+            tmin_c = mean(tmin_c),
+            precip = sum(precip), 
+            no_months=length(unique(month))) #first and last month dont have full 12 months
+
+source("almond_yield_anomaly.R")
+
+
+# come up with your parameter list
+factors = c("tmax_c", "tmin_c", "precip")
+
+# pick distribution type for each parameter set above
+# how do you pick a distribution??? 
+q = c("qnorm", "qnorm","qnorm")
+
+#find possible means and standard deviations from data we have
+mean(data$tmin_c) #12.04351
+sd(data$tmin_c) #3.145359
+
+mean(data$tmax_c) #21.53264
+sd(data$tmax_c) #3.389661
+
+mean(data$precip) #1.461584
+sd(data$precip) #8.401088
+
+# pick distribution parameters; when do the qnorm() ie normal distribution for a set of parameters need to list mean and sd. when do qunif() ie uniform distriubution need min and max
+q.arg = list(list(mean=12.04351,sd=3.145359), list(mean=21.53264, sd=3.389661),  list(mean=1.461584, sd=8.401088))
+
+# generate samples from Latin Hypter cube; generally do as many as you possibly can 
+nsamples=200
+#NULL for first because your model might be offline or complication. this says that it should wait until I run the model for you
+sens = pse::LHS(NULL,factors,nsamples,q,q.arg, nboot=500)
+# get the parameter sets
+sens_pars = get.data(sens)
+head(sens_pars)
+
+# run model and get a result for each parameter set
+# lets say we are interested in population after 50 years
+
+###this isn't working
+res = mapply(almond_yield_anomaly,  tmax_c=sens_pars$tmax_c, tmin_c=sens_pars$tmin_c, precip=sens_pars$precip, T=50)
+
+# send results back to LHS
+sens=pse::tell(sens, res, res.names=c("Pop50"))
+
+
+# Look at the cummulative distribution of the output
+pse::plotecdf(sens)
+
+# and its range
+boxplot(sens$res, ylab="Pop50")
+
+
+
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
